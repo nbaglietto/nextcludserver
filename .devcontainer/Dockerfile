@@ -1,11 +1,13 @@
 FROM ubuntu:jammy
-
+RUN echo 'root:123456' | chpasswd
 ARG DEBIAN_FRONTEND=noninteractive
 
 # PHP
 RUN apt-get update -y && \
     apt install -y apache2 vim software-properties-common sudo nano gnupg2
-
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
+    
 RUN apt-get install --no-install-recommends -y \
     php8.1 \
     php8.1-common \
@@ -84,3 +86,4 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | b
 RUN bash --login -i -c 'source /home/devcontainer/.bashrc && nvm install 16'
 
 WORKDIR /var/www/html
+EXPOSE 389
